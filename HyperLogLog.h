@@ -1,5 +1,6 @@
 #ifndef HYPERLOGLOG_H
 #define HYPERLOGLOG_H
+#include <vector>
 
 using namespace std;
 
@@ -15,7 +16,7 @@ class HyperLogLog {
     pair<unsigned int, unsigned int> values(unsigned int element);
     void insert();
     unsigned int estimarFreq(unsigned int element);
-    void Union(HyperLogLog *h1, HyperLogLog h2);
+    void Union(HyperLogLog *h1, HyperLogLog *h2);
 };
 
 #endif
