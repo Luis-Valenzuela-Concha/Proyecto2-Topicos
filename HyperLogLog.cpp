@@ -7,7 +7,7 @@
 int seed = 1;
 
 HyperLogLog::HyperLogLog() {
-    m = pow(2, p) - 1; //Tamaño de vector M
+    m = pow(2, p); //Tamaño de vector M
     M = vector<unsigned int>(m, 0);
 }
 
@@ -36,13 +36,14 @@ pair<unsigned int, unsigned int> HyperLogLog::values(unsigned int element) {
     return values;
 }
 
-void HyperLogLog::insert() { ; }  // FALTA HACER EL INSERTAR
-
-unsigned int HyperLogLog::estimarFreq(unsigned int element) {
+void HyperLogLog::insert(unsigned int element) {
     pair<unsigned int, unsigned int> valores = values(element);
     unsigned int j = valores.first;
     unsigned int w = valores.second;
+    M[j]=max(M[j],w);
+}
 
+unsigned int HyperLogLog::estimarCard() {
     unsigned int E;
 
     float a_m = 0.7213 / (1 + 1.079/m);
@@ -63,4 +64,11 @@ void HyperLogLog::Union(HyperLogLog h) { //Se une con otro sketch
     for (int i = 0; i < m; i++) {
         this->M[i] = max(this->M[i], h.M[i]);
     }
+}
+
+void HyperLogLog::print(){
+    for(int i=0;i<m;i++){
+        if(i%70==0) cout << endl;
+        cout << M[i] <<" ";
+    }cout << endl;
 }

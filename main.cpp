@@ -7,6 +7,7 @@ using namespace std;
 int main(){
     HyperLogLog HLL;
     HyperLogLog HLL2;
+    HLL.print();
     HLL.Union(HLL2);
     return 0;
 }
