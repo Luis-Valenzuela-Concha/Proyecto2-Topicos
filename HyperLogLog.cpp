@@ -9,3 +9,7 @@ HyperLogLog::HyperLogLog(){
 }
 
 HyperLogLog::~HyperLogLog(){;}
+
+void HyperLogLog::Union(){
+    
+}

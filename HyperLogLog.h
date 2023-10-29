@@ -4,6 +4,7 @@
 class HyperLogLog{
     HyperLogLog();
     ~HyperLogLog();
+    void Union();
     
 };
 
