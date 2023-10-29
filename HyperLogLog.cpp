@@ -1,22 +1,23 @@
-#include "HyperLogLog.h"
 #include <bits/stdc++.h>
 #include <iostream>
 #include <unordered_map>
+#include "HyperLogLog.h"
 #include "MurmurHash3.h"
 
 int seed = 1;
 
 HyperLogLog::HyperLogLog() {
-    m = pow(2, p) - 1;
+    m = pow(2, p) - 1; //Tamaño de vector M
     M = vector<unsigned int>(m, 0);
 }
 
-HyperLogLog::~HyperLogLog() { ; }
+HyperLogLog::~HyperLogLog() {;}
 
+//Trasforma elemento en j y w 
 pair<unsigned int, unsigned int> HyperLogLog::values(unsigned int element) {
     uint32_t x;
     uint32_t hash;
-    MurmurHash3_x86_32(&element, sizeof(unsigned int), seed, &hash);  // CAMBIAR SEED
+    MurmurHash3_x86_32(&element, sizeof(unsigned int), seed, &hash);
     x = hash % m;
 
     unsigned int j = x >> 32 - p;
@@ -55,10 +56,11 @@ unsigned int HyperLogLog::estimarFreq(unsigned int element) {
     return E;
 }
 
-void HyperLogLog::Union(HyperLogLog *h1, HyperLogLog *h2) {
-    for (int i = 0; i < m; i++) {
-        h1->M[i] = max(h1->M[i], h2->M[i]);
+void HyperLogLog::Union(HyperLogLog h) { //Se une con otro sketch
+    if(this->m != h.m){
+        cout << "Deben ser de mismo tamaño << endl"; return;
     }
-    free(h2);
-    // PREGUNTAR SI SE DEBE HACER UN DELETE DE H2
+    for (int i = 0; i < m; i++) {
+        this->M[i] = max(this->M[i], h.M[i]);
+    }
 }
