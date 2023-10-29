@@ -25,7 +25,6 @@ int main(){
 
     //insert
     for(int i=0;i<file.size();i++) HLL.insert(file[i]);
-    cout << "Cardinalidad: " << HLL.estimarCard() << endl;
     printf("Cardinalidad: %.2Lf\n",HLL.estimarCard());
     return 0;
 }
