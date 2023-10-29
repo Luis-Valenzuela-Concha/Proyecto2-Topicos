@@ -1,11 +1,21 @@
 #ifndef HYPERLOGLOG_H
 #define HYPERLOGLOG_H
 
-class HyperLogLog{
+using namespace std;
+
+class HyperLogLog {
+   private:
+    int p = 14;
+    int m;
+    vector<unsigned int> M;
+
+   public:
     HyperLogLog();
     ~HyperLogLog();
-    void Union();
-    
+    pair<unsigned int, unsigned int> values(unsigned int element);
+    void insert();
+    unsigned int estimarFreq(unsigned int element);
+    void Union(HyperLogLog *h1, HyperLogLog h2);
 };
 
 #endif
