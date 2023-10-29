@@ -30,16 +30,16 @@ pair<unsigned int, unsigned int> HyperLogLog::values(unsigned int element) {
         w++;
     }
     pair<unsigned int, unsigned int> values;
-    values.first = j;
-    values.second = w;
+    values.first = j;  //posicion
+    values.second = w; //valor
 
     return values;
 }
 
 void HyperLogLog::insert(unsigned int element) {
     pair<unsigned int, unsigned int> valores = values(element);
-    unsigned int j = valores.first;
-    unsigned int w = valores.second;
+    unsigned int j = valores.first;  //posicion
+    unsigned int w = valores.second; //valor
     M[j]=max(M[j],w);
 }
 
