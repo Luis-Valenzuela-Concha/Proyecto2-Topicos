@@ -15,7 +15,7 @@ class HyperLogLog {
     ~HyperLogLog();
     pair<unsigned int, unsigned int> values(unsigned int element);
     void insert(unsigned int element);
-    unsigned int estimarCard();
+    long double estimarCard();
     void Union(HyperLogLog h);
     void print();
 };

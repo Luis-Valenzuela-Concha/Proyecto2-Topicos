@@ -16,10 +16,7 @@ HyperLogLog::~HyperLogLog() {;}
 //Trasforma elemento en j y w 
 pair<unsigned int, unsigned int> HyperLogLog::values(unsigned int element) {
     uint32_t x;
-    uint32_t hash;
-    MurmurHash3_x86_32(&element, sizeof(unsigned int), seed, &hash);
-    x = hash % m;
-
+    MurmurHash3_x86_32(&element, sizeof(unsigned int), seed, &x);
     unsigned int j = x >> 32 - p;
     unsigned int b = x << p;
 
@@ -43,17 +40,17 @@ void HyperLogLog::insert(unsigned int element) {
     M[j]=max(M[j],w);
 }
 
-unsigned int HyperLogLog::estimarCard() {
-    unsigned int E;
+long double HyperLogLog::estimarCard() {
+    long double E;
 
-    float a_m = 0.7213 / (1 + 1.079/m);
-    float num = a_m * m*m;
-    float den = 0;
+    long double a_m = 0.7213 / (1 + 1.079/m);
+    long double num = a_m * m*m;
+    long double den = 0;    
+    
     for (int i = 0; i < m; i++) {
-        den += pow(2, -M[i]);
+        den += 1 / (pow(2, M[0]));
     }
-    E = (unsigned int)(num / den);
-
+    E = num / den;
     return E;
 }
 
@@ -61,14 +58,13 @@ void HyperLogLog::Union(HyperLogLog h) { //Se une con otro sketch
     if(this->m != h.m){
         cout << "Deben ser de mismo tamaño << endl"; return;
     }
-    for (int i = 0; i < m; i++) {
+    for (int i=0; i<this->m; i++) {
         this->M[i] = max(this->M[i], h.M[i]);
     }
 }
 
 void HyperLogLog::print(){
     for(int i=0;i<m;i++){
-        if(i%70==0) cout << endl;
         cout << M[i] <<" ";
-    }cout << endl;
+    }
 }
