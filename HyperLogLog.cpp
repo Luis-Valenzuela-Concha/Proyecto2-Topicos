@@ -1,23 +1,24 @@
-#include "HyperLogLog.h"
-
 #include <bits/stdc++.h>
-
 #include <iostream>
 #include <unordered_map>
 
-HyperLogLog::HyperLogLog() {
-    m = pow(2, p) - 1;
+#include "HyperLogLog.h"
+#include "MurmurHash3.h"
+
+int seed = 1;
+
+HyperLogLog::HyperLogLog(int p) {
+    this->p = p;
+    m = pow(2, p); //Tamaño de vector M
     M = vector<unsigned int>(m, 0);
 }
 
-HyperLogLog::~HyperLogLog() { ; }
+HyperLogLog::~HyperLogLog() {;}
 
-pair<unsigned int, unsigned int> HyperLogLog::values(unsigned int element) {
+//Trasforma elemento en j y w 
+pair<unsigned int, unsigned int> HyperLogLog::values(string element) {
     uint32_t x;
-    uint32_t hash;
-    MurmurHash3_x86_32(&element, sizeof(unsigned int), seedCU, &hash);  // CAMBIAR SEED
-    x = hash % m;
-
+    MurmurHash3_x86_32(&element, sizeof(string), seed, &x);
     unsigned int j = x >> 32 - p;
     unsigned int b = x << p;
 
@@ -28,35 +29,48 @@ pair<unsigned int, unsigned int> HyperLogLog::values(unsigned int element) {
         w++;
     }
     pair<unsigned int, unsigned int> values;
-    values.first = j;
-    values.second = w;
+    values.first = j;  //posicion
+    values.second = w; //valor
 
     return values;
 }
 
-void HyperLogLog::insert() { ; }  // FALTA HACER EL INSERTAR
-
-unsigned int HyperLogLog::estimarFreq(unsigned int element) {
+void HyperLogLog::insert(string element) {
     pair<unsigned int, unsigned int> valores = values(element);
-    unsigned int j = valores.first;
-    unsigned int w = valores.second;
+    unsigned int j = valores.first;  //posicion
+    unsigned int w = valores.second; //valor
+    cout << element << endl;
+    printf("j: %d w: %d\n",j,w);
+    M[j]=max(M[j],w);
+}
 
-    unsigned int E;
+long double HyperLogLog::estimarCard()
+{
+    long double E;
 
-    float a_m = 0.7213 / (1 + 1.079 / m);
-    float num = a_m * m * m;
-    float den = 0;
+    long double a_m = 0.7213 / (1 + 1.079/m);
+    long double num = a_m * m*m;
+    long double den = 0;    
+    
     for (int i = 0; i < m; i++) {
-        den += pow(2, -M[i]);
+        den += 1 / (pow(2, M[0]));
     }
-    E = (unsigned int)(num / den);
-
+    E = num / den;
+    //Agregar correcciones
     return E;
 }
 
-void HyperLogLog::Union(HyperLogLog *h1, HyperLogLog h2) {
-    for (int i = 0; i < m; i++) {
-        h1->M[i] = max(h1->M[i], h2.M[i]);
+void HyperLogLog::Union(HyperLogLog h) { //Se une con otro sketch
+    if(this->m != h.m){
+        cout << "Deben ser de mismo tamaño << endl"; return;
     }
-    // PREGUNTAR SI SE DEBE HACER UN DELETE DE H2
+    for (int i=0; i<this->m; i++) {
+        this->M[i] = max(this->M[i], h.M[i]);
+    }
+}
+
+void HyperLogLog::print(){
+    for(int i=0;i<m;i++){
+        cout << M[i] <<" ";
+    }
 }

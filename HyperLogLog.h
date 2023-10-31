@@ -1,21 +1,25 @@
 #ifndef HYPERLOGLOG_H
 #define HYPERLOGLOG_H
 
+#include <vector>
+#include <string>
+
 using namespace std;
 
 class HyperLogLog {
    private:
-    int p = 14;
-    int m;
-    vector<unsigned int> M;
+        int p;
+        int m;
+        vector<unsigned int> M;
 
    public:
-    HyperLogLog();
-    ~HyperLogLog();
-    pair<unsigned int, unsigned int> values(unsigned int element);
-    void insert();
-    unsigned int estimarFreq(unsigned int element);
-    void Union(HyperLogLog *h1, HyperLogLog h2);
+        HyperLogLog(int p);
+        ~HyperLogLog();
+        pair<unsigned int, unsigned int> values(string element);
+        void insert(string element);
+        long double estimarCard();
+        void Union(HyperLogLog h);
+        void print();
 };
 
 #endif
