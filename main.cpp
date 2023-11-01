@@ -44,9 +44,12 @@ int main(){
     printf("Cardinalidad HLL1: %.2Lf\n",HLL1.estimarCard());
     printf("Cardinalidad HLL2: %.2Lf\n",HLL2.estimarCard());
 
-    //Union
+    //Union de HLL1 y HLL2
     printf("\nUnion HLL1 y HLL2\n");
     HLL1.Union(HLL2);
     printf("Cardinalidad HLL1: %.2Lf\n",HLL1.estimarCard());
+
+    //Compresion
+
     return 0;
 }
