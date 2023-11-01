@@ -6,11 +6,6 @@
 
 int seed = 1;
 
-#include "HyperLogLog.h"
-#include "MurmurHash3.h"
-
-int seed = 1;
-
 HyperLogLog::HyperLogLog(int p) {
     this->p = p;
     m = pow(2, p); //Tamaño de vector M
