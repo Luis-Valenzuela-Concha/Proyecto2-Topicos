@@ -30,3 +30,6 @@
 *.exe
 *.out
 *.app
+
+/.vscode
+GCF_001522075.1_ASM152207v1_genomic.fna
