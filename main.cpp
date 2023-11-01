@@ -3,6 +3,7 @@
 #include <iostream>
 #include <fstream>
 #include <string.h>
+#include <sdsl/int_vector.hpp>
 
 using namespace std;
 
