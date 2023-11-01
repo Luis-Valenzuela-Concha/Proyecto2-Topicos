@@ -41,8 +41,7 @@ void HyperLogLog::insert(string element) {
     M[j]=max(M[j],w);
 }
 
-long double HyperLogLog::estimarCard()
-{
+long double HyperLogLog::estimarCard() {
     long double E;
 
     long double a_m = 0.7213 / (1 + 1.079/m);
