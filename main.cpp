@@ -29,21 +29,24 @@ void insertarKMER(HyperLogLog *h, vector<string> v,int k){
 }
 
 int main(){
-    vector<string> genoma1 = copiarArchivo("GCF_001522075.1_ASM152207v1_genomic.fna");
-    vector<string> genoma2 = copiarArchivo("GCF_000717965.1_ASM71796v1_genomic.fna");
+    vector<string> genoma1 = copiarArchivo("genomas/GCF_001522075.1_ASM152207v1_genomic.fna");
+    vector<string> genoma2 = copiarArchivo("genomas/GCF_000717965.1_ASM71796v1_genomic.fna");
     
     //Inicializacion
-    HyperLogLog HLL(14);
+    HyperLogLog HLL1(14);
     HyperLogLog HLL2(14);
 
     //Inserta kmer
-    insertarKMER(&HLL,genoma1,10);
+    insertarKMER(&HLL1,genoma1,10);
     insertarKMER(&HLL2,genoma2,11);
 
-    printf("Cardinalidad HLL : %.2Lf\n",HLL.estimarCard());
+    //Calculo cardinalidad
+    printf("Cardinalidad HLL1: %.2Lf\n",HLL1.estimarCard());
     printf("Cardinalidad HLL2: %.2Lf\n",HLL2.estimarCard());
 
-    HLL.Union(HLL2);
-    printf("Cardinalidad HLL : %.2Lf\n",HLL.estimarCard());
+    //Union
+    printf("\nUnion HLL1 y HLL2\n");
+    HLL1.Union(HLL2);
+    printf("Cardinalidad HLL1: %.2Lf\n",HLL1.estimarCard());
     return 0;
 }
