@@ -39,7 +39,7 @@ int main(){
 
     //Inserta kmer
     insertarKMER(&HLL1,genoma1,10);
-    insertarKMER(&HLL2,genoma2,11);
+    insertarKMER(&HLL2,genoma2,5);
 
     //Calculo cardinalidad
     printf("Cardinalidad HLL1: %.2Lf\n",HLL1.estimarCard());
@@ -51,6 +51,9 @@ int main(){
     printf("Cardinalidad HLL1: %.2Lf\n",HLL1.estimarCard());
 
     //Compresion
-    
+    cout << HLL1.sizeInBits() << endl;
+    cout << HLL1.compress_wm_int() << endl;
+    cout << HLL2.compress_wt_huff() << endl;
+    cout << HLL1.sizeInBits() << endl;
     return 0;
 }

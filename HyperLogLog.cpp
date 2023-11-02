@@ -1,11 +1,13 @@
 #include "HyperLogLog.h"
-
 #include <bits/stdc++.h>
-
 #include <iostream>
 #include <unordered_map>
-
 #include "MurmurHash3.h"
+#include <sdsl/wm_int.hpp>
+#include <sdsl/csa_wt.hpp>
+#include <sdsl/wt_huff.hpp>
+
+using namespace sdsl;
 
 int seed = 1;
 
@@ -90,6 +92,24 @@ void HyperLogLog::Union(HyperLogLog h) {  // Se une con otro sketch
     for (int i = 0; i < this->m; i++) {
         this->M[i] = max(this->M[i], h.M[i]);
     }
+}
+
+size_t HyperLogLog::sizeInBits() {
+    return M.size() * sizeof(uint8_t) * 8;
+}
+
+uint32_t HyperLogLog::compress_wm_int() {
+    wm_int<rrr_vector<15>> wm_int;
+    construct_im(wm_int, &M, 1);
+    const uint32_t bitSize = size_in_bytes(wm_int)*8;
+    return bitSize;
+}
+
+uint32_t HyperLogLog::compress_wt_huff() {
+    wt_huff<rrr_vector<15>> wt_huff;
+    construct_im(wt_huff, &M, 1);
+    const uint32_t bitSize = size_in_bytes(wt_huff)*8;
+    return bitSize;
 }
 
 void HyperLogLog::print() {
