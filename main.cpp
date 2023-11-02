@@ -34,8 +34,9 @@ int main(){
     vector<string> genoma2 = copiarArchivo("genomas/GCF_000717965.1_ASM71796v1_genomic.fna");
     
     //Inicializacion
-    HyperLogLog HLL1(14);
-    HyperLogLog HLL2(14);
+    int p = 14;
+    HyperLogLog HLL1(p);
+    HyperLogLog HLL2(p);
 
     //Inserta kmer
     insertarKMER(&HLL1,genoma1,10);
