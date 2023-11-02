@@ -10,12 +10,12 @@ class HyperLogLog {
    private:
         int p;
         int m;
-        vector<unsigned int> M;
+        vector<uint8_t> M;
 
    public:
         HyperLogLog(int p);
         ~HyperLogLog();
-        pair<unsigned int, unsigned int> values(string element);
+        pair<unsigned int, uint8_t> values(string element);
         void insert(string element);
         long double estimarCard();
         void Union(HyperLogLog h);

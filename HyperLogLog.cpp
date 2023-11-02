@@ -12,25 +12,25 @@ int seed = 1;
 HyperLogLog::HyperLogLog(int p) {
     this->p = p;
     m = pow(2, p);  // Tamaño de vector M
-    M = vector<unsigned int>(m, 0);
+    M = vector<uint8_t>(m, 0);
 }
 
 HyperLogLog::~HyperLogLog() { ; }
 
 // Trasforma elemento en j y w
-pair<unsigned int, unsigned int> HyperLogLog::values(string element) {
+pair<unsigned int, uint8_t> HyperLogLog::values(string element) {
     uint32_t x;
     MurmurHash3_x86_32(element.c_str(), element.size(), seed, &x);
     unsigned int j = x >> 32 - p;
     unsigned int b = x << p;
 
-    int w = 1;
+    uint8_t w = 1;
     unsigned int aux = 1 << 31;
     while ((b & aux) == 0 && aux != 0) {
         aux = aux >> 1;
         w++;
     }
-    pair<unsigned int, unsigned int> values;
+    pair<unsigned int, uint8_t> values;
     values.first = j;   // posicion
     values.second = w;  // valor
 
@@ -38,9 +38,9 @@ pair<unsigned int, unsigned int> HyperLogLog::values(string element) {
 }
 
 void HyperLogLog::insert(string element) {
-    pair<unsigned int, unsigned int> valores = values(element);
+    pair<unsigned int, uint8_t> valores = values(element);
     unsigned int j = valores.first;   // posicion
-    unsigned int w = valores.second;  // valor
+    uint8_t w = valores.second;  // valor
     M[j] = max(M[j], w);
 }
 

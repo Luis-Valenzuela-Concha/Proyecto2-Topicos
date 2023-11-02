@@ -51,6 +51,6 @@ int main(){
     printf("Cardinalidad HLL1: %.2Lf\n",HLL1.estimarCard());
 
     //Compresion
-
+    
     return 0;
 }
