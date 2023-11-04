@@ -89,12 +89,28 @@ wm_int<rrr_vector<15>> CountMinCU::compress_wm_int() {
     return wm_int;
 }
 
+wt_huff<rrr_vector<15>> CountMinCU::compress_wt_huff() {
+    wt_huff<rrr_vector<15>> wt_huff;
+    construct_im(wt_huff, sketch, 4);
+    return wt_huff;
+}
+
 int CountMinCU::estimarFreq_wm_int(wm_int<rrr_vector<15>> wm_int,unsigned int element) {
     int error = 2;
     unsigned int freq_est = UINT_MAX;
     for (int i = 0; i < this->depth; i++) {
         int j = useHashCU(element, this->width, i);
         if (wm_int[(this->width*i)+j+error] < freq_est) freq_est = wm_int[(this->width*i)+j+error];
+    }
+    return freq_est;
+}
+
+int CountMinCU::estimarFreq_wt_huff(wt_huff<rrr_vector<15>> wt_huff,unsigned int element) {
+    int error = 2;
+    unsigned int freq_est = UINT_MAX;
+    for (int i = 0; i < this->depth; i++) {
+        int j = useHashCU(element, this->width, i);
+        if (wt_huff[(this->width*i)+j+error] < freq_est) freq_est = wt_huff[(this->width*i)+j+error];
     }
     return freq_est;
 }
