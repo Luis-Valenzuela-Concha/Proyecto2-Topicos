@@ -12,7 +12,7 @@ sketch HLL y también los resultados obtenidos antes y luego de la compresión.
 
 ## Compilación y ejecución:
 ```
-g++ *.cpp hashes/*.cpp -o Proyecto1.out && ./Proyecto1.out
+g++ -std=c++11 -O3 -DNDEBUG -I ~/include -L ~/lib hashes/*.cpp CountMinCU.cpp  main.cpp HyperLogLog.cpp -o a.out -lsdsl -ldivsufsort -ldivsufsort64 && ./a.out
 ```
 ## Integrantes
 Bruno Arce R. y Luis Valenzuela C.
