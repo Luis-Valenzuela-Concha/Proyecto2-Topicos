@@ -2,7 +2,7 @@
 #include <bits/stdc++.h>
 #include <iostream>
 #include <unordered_map>
-#include "MurmurHash3.h"
+#include "hashes/MurmurHash3.h"
 #include <sdsl/wm_int.hpp>
 #include <sdsl/csa_wt.hpp>
 #include <sdsl/wt_huff.hpp>

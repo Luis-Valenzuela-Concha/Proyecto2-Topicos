@@ -30,8 +30,8 @@ void insertarKMER(HyperLogLog *h, vector<string> v,int k){
 }
 
 int main(){
-    vector<string> genoma1 = copiarArchivo("genomas/GCF_001522075.1_ASM152207v1_genomic.fna");
-    vector<string> genoma2 = copiarArchivo("genomas/GCF_000717965.1_ASM71796v1_genomic.fna");
+    vector<string> genoma1 = copiarArchivo("datasets/GCF_001522075.1_ASM152207v1_genomic.fna");
+    vector<string> genoma2 = copiarArchivo("datasets/GCF_000717965.1_ASM71796v1_genomic.fna");
     
     //Inicializacion
     int p = 14;
