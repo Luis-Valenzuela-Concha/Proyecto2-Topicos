@@ -118,8 +118,9 @@ int main(){
     vector<unsigned int> traza = copiarArchivoUINT("datasets/Chicago-20080515.txt");
 
     //Inicializacion
-    printf("Se inicializa sketch CountMinCU con w = 5000 y d = 4.\n");
-    CountMinCU sketchCU(50000, 4);
+    int w = 15000;
+    printf("Se inicializa sketch CountMinCU con w = %d y d = 4.\n",w);
+    CountMinCU sketchCU(w, 4);
     //Inserta traza
     unordered_map<unsigned int,int> freq;
     printf("Insertando elementos en el sketch...\n");
@@ -151,37 +152,58 @@ int main(){
     printf("HLL2 wt_huff: %.2f\n",(float)size_in_bytes(HLL2_compressed_wm_int)/HLL2.size_in_bytes());
     printf("CCU  wm_int:  %.2f\n\n",(float)size_in_bytes(sketchCU_compressed_wt_huff)/sketchCU.size_in_bytes());
 
+    //Analisis de tiempo
     printf("Analisis de tiempo:\n");
+    int t_union_sin_compresion = 0;
+    int t_union_wm_int = 0;
+    int t_union_wt_huff = 0;
+    int t_estimacion_sin_compresion = 0;
+    int t_estimacion_wm_int = 0;
+
+    int it = 50; //iteraciones
+    for(int i=0;i<it;i++){
+        HyperLogLog aux1 = HLL5;
+        auto start = chrono::high_resolution_clock::now();
+        aux1.Union(HLL2);
+        auto finish = chrono::high_resolution_clock::now();
+        auto d = chrono::duration_cast<chrono::nanoseconds> (finish - start).count();
+        t_union_sin_compresion += d;
+
+        HyperLogLog aux2 = HLL6;
+        start = chrono::high_resolution_clock::now();
+        aux2.union_wm_int(HLL6_compressed_wm_int,HLL2_compressed_wm_int);
+        finish = chrono::high_resolution_clock::now();
+        d = chrono::duration_cast<chrono::nanoseconds> (finish - start).count();
+        t_union_wm_int += d;
+
+        HyperLogLog aux3 = HLL7;
+        start = chrono::high_resolution_clock::now();
+        aux3.union_wt_huff(HLL7_compressed_wt_huff,HLL2_compressed_wt_huff);
+        finish = chrono::high_resolution_clock::now();
+        d = chrono::duration_cast<chrono::nanoseconds> (finish - start).count();
+        t_union_wt_huff += d;
+
+        start = chrono::high_resolution_clock::now();
+        sketchCU.estimarFreq(traza[0]);
+        finish = chrono::high_resolution_clock::now();
+        d = chrono::duration_cast<chrono::nanoseconds> (finish - start).count();
+        t_estimacion_sin_compresion += d;
+
+        start = chrono::high_resolution_clock::now();
+        sketchCU.estimarFreq_wm_int(sketchCU_compressed_wm_int,traza[0]);
+        finish = chrono::high_resolution_clock::now();
+        d = chrono::duration_cast<chrono::nanoseconds> (finish - start).count();
+        t_estimacion_wm_int += d;
+    }
+
     printf("Union HLL1 y HLL2:\n");
-    auto start = chrono::high_resolution_clock::now();
-    HLL5.Union(HLL2);
-    auto finish = chrono::high_resolution_clock::now();
-    auto d = chrono::duration_cast<chrono::nanoseconds> (finish - start).count();
-    printf("Sin compresion: %ld [ns]\n",d);
-
-    start = chrono::high_resolution_clock::now();
-    HLL6.union_wm_int(HLL6_compressed_wm_int,HLL2_compressed_wm_int);
-    finish = chrono::high_resolution_clock::now();
-    d = chrono::duration_cast<chrono::nanoseconds> (finish - start).count();
-    printf("Union wm_int:   %ld [ns]\n",d);
-
-    start = chrono::high_resolution_clock::now();
-    HLL7.union_wt_huff(HLL7_compressed_wt_huff,HLL2_compressed_wt_huff);
-    finish = chrono::high_resolution_clock::now();
-    d = chrono::duration_cast<chrono::nanoseconds> (finish - start).count();
-    printf("Union wt_huff:  %ld [ns]\n\n",d);
-
+    printf("Sin compresion: %d [ns]\n",t_union_sin_compresion/it);
+    printf("Union wm_int:   %d [ns]\n",t_union_wm_int/it);
+    printf("Union wt_huff:  %d [ns]\n\n",t_union_wt_huff/it);
+    
     printf("Estimacion de frecuencia:\n");
-    start = chrono::high_resolution_clock::now();
-    sketchCU.estimarFreq(traza[0]);
-    finish = chrono::high_resolution_clock::now();
-    d = chrono::duration_cast<chrono::nanoseconds> (finish - start).count();
-    printf("Sin compresion: %ld [ns]\n",d);
+    printf("Sin compresion: %d [ns]\n",t_estimacion_sin_compresion/it);
+    printf("Estimacion wm_int: %d [ns]\n",t_estimacion_wm_int/it);
 
-    start = chrono::high_resolution_clock::now();
-    sketchCU.estimarFreq_wm_int(sketchCU_compressed_wm_int,traza[0]);
-    finish = chrono::high_resolution_clock::now();
-    d = chrono::duration_cast<chrono::nanoseconds> (finish - start).count();
-    printf("Estimacion wm_int: %ld [ns]\n",d);
     return 0;
 }
