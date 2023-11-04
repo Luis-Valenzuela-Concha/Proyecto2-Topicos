@@ -93,10 +93,6 @@ void HyperLogLog::Union(HyperLogLog h) {  // Se une con otro sketch
     }
 }
 
-int HyperLogLog::size_in_bytes() {
-    return M.size() * sizeof(uint8_t);
-}
-
 wm_int<rrr_vector<15>> HyperLogLog::compress_wm_int() {
     wm_int<rrr_vector<15>> wm_int;
     construct_im(wm_int, M, 1);
@@ -198,6 +194,10 @@ void HyperLogLog::union_wt_huff(wt_huff<rrr_vector<15>> wt_huff1,wt_huff<rrr_vec
     for (int i = error; i < this->m + error; i++) {
         this->M[i-error] = max(wt_huff1[i], wt_huff2[i]);
     }
+}
+
+int HyperLogLog::size_in_bytes() {
+    return M.size() * sizeof(uint8_t);
 }
 
 void HyperLogLog::print() {

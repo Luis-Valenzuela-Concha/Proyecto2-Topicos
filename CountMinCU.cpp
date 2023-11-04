@@ -27,17 +27,6 @@ CountMinCU::CountMinCU(int w, int d) {
 // Destructor de la clase
 CountMinCU::~CountMinCU() { ; }
 
-// Funcion que imprime el sketch
-void CountMinCU::printSketch() {
-    cout << "Sketch:" << endl;
-    for (int i = 0; i < this->depth; i++) {
-        for (int j = 0; j < this->width; j++) {
-            cout << sketch[(this->width*i)+j] << " ";
-        }
-        printf("\n\n");
-    }
-}
-
 // Funcion que permite usar las funciones de hash
 int useHashCU(unsigned int element, int size, int i) {
     uint32_t hash_value;
@@ -117,4 +106,15 @@ int CountMinCU::estimarFreq_wt_huff(wt_huff<rrr_vector<15>> wt_huff,unsigned int
 
 int CountMinCU::size_in_bytes(){
     return sketch.size()*sizeof(unsigned int);
+}
+
+// Funcion que imprime el sketch
+void CountMinCU::printSketch() {
+    cout << "Sketch:" << endl;
+    for (int i = 0; i < this->depth; i++) {
+        for (int j = 0; j < this->width; j++) {
+            cout << sketch[(this->width*i)+j] << " ";
+        }
+        printf("\n\n");
+    }
 }

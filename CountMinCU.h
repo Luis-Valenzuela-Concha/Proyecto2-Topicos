@@ -27,7 +27,7 @@ class CountMinCU {
     wt_huff<rrr_vector<15>> compress_wt_huff();
     int estimarFreq_wm_int(wm_int<rrr_vector<15>> wm_int,unsigned int element);
     int estimarFreq_wt_huff(wt_huff<rrr_vector<15>> wt_huff,unsigned int element);
-    void printSketch();
     int size_in_bytes();
+    void printSketch();
 };
 #endif
