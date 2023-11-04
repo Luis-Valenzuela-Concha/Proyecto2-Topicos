@@ -92,6 +92,8 @@ int main(){
     wt_huff<rrr_vector<15>> HLL3_compressed_wt_huff = HLL3.compress_wt_huff();
     wm_int<rrr_vector<15>> HLL2_compressed_wm_int = HLL2.compress_wm_int();
     wt_huff<rrr_vector<15>> HLL2_compressed_wt_huff = HLL2.compress_wt_huff();
+    wm_int<rrr_vector<15>> HLL6_compressed_wm_int = HLL6.compress_wm_int();
+    wt_huff<rrr_vector<15>> HLL7_compressed_wt_huff = HLL7.compress_wt_huff();
     printf("Compresion finalizada.\n\n");
 
     //Estimacion de cardinalidad
@@ -158,13 +160,13 @@ int main(){
     printf("Sin compresion: %ld [ns]\n",d);
 
     start = chrono::high_resolution_clock::now();
-    HLL6.union_wm_int(HLL6.compress_wm_int(),HLL2_compressed_wm_int);
+    HLL6.union_wm_int(HLL6_compressed_wm_int,HLL2_compressed_wm_int);
     finish = chrono::high_resolution_clock::now();
     d = chrono::duration_cast<chrono::nanoseconds> (finish - start).count();
     printf("Union wm_int:   %ld [ns]\n",d);
 
     start = chrono::high_resolution_clock::now();
-    HLL7.union_wt_huff(HLL6.compress_wt_huff(),HLL2_compressed_wt_huff);
+    HLL7.union_wt_huff(HLL7_compressed_wt_huff,HLL2_compressed_wt_huff);
     finish = chrono::high_resolution_clock::now();
     d = chrono::duration_cast<chrono::nanoseconds> (finish - start).count();
     printf("Union wt_huff:  %ld [ns]\n\n",d);
