@@ -24,7 +24,7 @@ class HyperLogLog {
           long double estimarCard();
           void Union(HyperLogLog h);
           size_t sizeInBits();
-          uint32_t compress_wm_int();
+          wm_int<rrr_vector<15>> compress_wm_int();
           wt_huff<rrr_vector<15>> compress_wt_huff();
           void print();
 };

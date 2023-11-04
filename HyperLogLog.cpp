@@ -54,7 +54,7 @@ long double HyperLogLog::estimarCard() {
     long double den = 0;
 
     for (int i = 0; i < m; i++) {
-        den += 1 / (pow(2, M[0]));
+        den += 1 / (pow(2, M[i]));
     }
     E = num / den;
     return E;
@@ -99,11 +99,10 @@ size_t HyperLogLog::sizeInBits() {
     return M.size() * sizeof(uint8_t) * 8;
 }
 
-uint32_t HyperLogLog::compress_wm_int() {
+wm_int<rrr_vector<15>> HyperLogLog::compress_wm_int() {
     wm_int<rrr_vector<15>> wm_int;
     construct_im(wm_int, M, 1);
-    const uint32_t bitSize = size_in_bytes(wm_int)*8;
-    return bitSize;
+    return wm_int;
 }
 
 wt_huff<rrr_vector<15>> HyperLogLog::compress_wt_huff() {

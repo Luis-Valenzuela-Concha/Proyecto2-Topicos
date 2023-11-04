@@ -40,7 +40,7 @@ int main(){
 
     //Inserta kmer
     insertarKMER(&HLL1,genoma1,10);
-    insertarKMER(&HLL2,genoma2,5);
+    insertarKMER(&HLL2,genoma2,10);
 
     //Calculo cardinalidad
     printf("Cardinalidad HLL1: %.2Lf\n",HLL1.estimarCard());
@@ -54,13 +54,13 @@ int main(){
     //HLL1.print();
     //Compresion
     wt_huff<rrr_vector<15>> comprimido = HLL1.compress_wt_huff();
+    wm_int<rrr_vector<15>> comprimido2 = HLL1.compress_wm_int();
     int m = pow(2, p); 
     cout << endl << endl;
     
-    /*for(int i = 0; i < m+8; i++){
-        printf("%d ",comprimido[i]);
-    }*/
-    cout << comprimido.size() << endl;
+    for(int i = 0; i < m+10; i++){
+        printf("%lu ",comprimido2[i]);
+    }
     
     return 0;
 }
