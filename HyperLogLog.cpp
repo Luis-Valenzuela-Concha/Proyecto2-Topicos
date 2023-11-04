@@ -57,8 +57,9 @@ long double HyperLogLog::estimarCard() {
         den += 1 / (pow(2, M[0]));
     }
     E = num / den;
+    return E;
     // Agregar correcciones
-    long double E_asterisco;
+    /*long double E_asterisco;
 
     if (E <= 5 / 2 * m) {
         int V = 0;
@@ -81,7 +82,7 @@ long double HyperLogLog::estimarCard() {
     if (E > 1 / 30 * pow(2, 32)) {
         E_asterisco = -1 * pow(2, 32) * log(1 - E / pow(2, 32));
     }
-    return E_asterisco;
+    return E_asterisco;*/
 }
 
 void HyperLogLog::Union(HyperLogLog h) {  // Se une con otro sketch
@@ -100,20 +101,21 @@ size_t HyperLogLog::sizeInBits() {
 
 uint32_t HyperLogLog::compress_wm_int() {
     wm_int<rrr_vector<15>> wm_int;
-    construct_im(wm_int, &M, 1);
+    construct_im(wm_int, M, 1);
     const uint32_t bitSize = size_in_bytes(wm_int)*8;
     return bitSize;
 }
 
-uint32_t HyperLogLog::compress_wt_huff() {
+wt_huff<rrr_vector<15>> HyperLogLog::compress_wt_huff() {
     wt_huff<rrr_vector<15>> wt_huff;
-    construct_im(wt_huff, &M, 1);
-    const uint32_t bitSize = size_in_bytes(wt_huff)*8;
-    return bitSize;
+    construct_im(wt_huff, M, 1);
+
+    //const uint32_t byteSize = size_in_bytes(wm_int);
+    return wt_huff;
 }
 
 void HyperLogLog::print() {
     for (int i = 0; i < m; i++) {
-        cout << M[i] << " ";
+        printf("%d ", M[i]);
     }
 }

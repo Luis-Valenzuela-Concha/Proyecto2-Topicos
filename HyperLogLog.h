@@ -8,6 +8,7 @@
 #include <sdsl/wt_huff.hpp>
 
 using namespace std;
+using namespace sdsl;
 
 class HyperLogLog {
    private:
@@ -24,7 +25,7 @@ class HyperLogLog {
           void Union(HyperLogLog h);
           size_t sizeInBits();
           uint32_t compress_wm_int();
-          uint32_t compress_wt_huff();
+          wt_huff<rrr_vector<15>> compress_wt_huff();
           void print();
 };
 

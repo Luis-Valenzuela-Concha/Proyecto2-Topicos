@@ -51,10 +51,16 @@ int main(){
     HLL1.Union(HLL2);
     printf("Cardinalidad HLL1: %.2Lf\n",HLL1.estimarCard());
 
+    //HLL1.print();
     //Compresion
-    cout << HLL1.sizeInBits() << endl;
-    cout << HLL1.compress_wm_int() << endl;
-    cout << HLL2.compress_wt_huff() << endl;
-    cout << HLL1.sizeInBits() << endl;
+    wt_huff<rrr_vector<15>> comprimido = HLL1.compress_wt_huff();
+    int m = pow(2, p); 
+    cout << endl << endl;
+    
+    /*for(int i = 0; i < m+8; i++){
+        printf("%d ",comprimido[i]);
+    }*/
+    cout << comprimido.size() << endl;
+    
     return 0;
 }
