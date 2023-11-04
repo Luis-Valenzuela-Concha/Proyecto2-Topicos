@@ -23,10 +23,12 @@ class HyperLogLog {
           void insert(string element);
           double cardinalidad();
           void Union(HyperLogLog h);
-          size_t sizeInBits();
           wm_int<rrr_vector<15>> compress_wm_int();
           wt_huff<rrr_vector<15>> compress_wt_huff();
           double cardinalidad_wm_int(wm_int<rrr_vector<15>> wm_int);
+          double cardinalidad_wt_huff(wt_huff<rrr_vector<15>> wt_huff);
+          void union_wm_int(wm_int<rrr_vector<15>> wm_int1,wm_int<rrr_vector<15>> wm_int2);
+          void union_wt_huff(wt_huff<rrr_vector<15>> wt_huff1,wt_huff<rrr_vector<15>> wt_huff2);
           void print();
 };
 

@@ -84,7 +84,6 @@ double HyperLogLog::cardinalidad() {
 }
 
 void HyperLogLog::Union(HyperLogLog h) {  // Se une con otro sketch
-    cout << this->m << " " << h.m << endl;
     if (this->m != h.m) {
         cout << "Deben ser de mismo tamaño << endl";
         return;
@@ -92,10 +91,6 @@ void HyperLogLog::Union(HyperLogLog h) {  // Se une con otro sketch
     for (int i = 0; i < this->m; i++) {
         this->M[i] = max(this->M[i], h.M[i]);
     }
-}
-
-size_t HyperLogLog::sizeInBits() {
-    return M.size() * sizeof(uint8_t) * 8;
 }
 
 wm_int<rrr_vector<15>> HyperLogLog::compress_wm_int() {
@@ -111,6 +106,7 @@ wt_huff<rrr_vector<15>> HyperLogLog::compress_wt_huff() {
 }
 
 double HyperLogLog::cardinalidad_wm_int(wm_int<rrr_vector<15>> wm_int){
+
     double E;
 
     double a_m = 0.7213 / (1 + 1.079 / m);
@@ -144,12 +140,64 @@ double HyperLogLog::cardinalidad_wm_int(wm_int<rrr_vector<15>> wm_int){
     return E_asterisco;
 }
 
+double HyperLogLog::cardinalidad_wt_huff(wt_huff<rrr_vector<15>> wt_huff){
+    double E;
+
+    double a_m = 0.7213 / (1 + 1.079 / m);
+    double num = a_m * m * m;
+    double den = 0;
+    int error = 8;
+    for (int i = error; i < m+error; i++) {
+        den += 1 / (pow(2, wt_huff[i]));
+    }
+    E = num / den;
+    return E;
+    // Agregar correcciones
+    double E_asterisco;
+
+    if (E <= 5 / 2 * m) {
+        int V = 0;
+        for (int i = error; i < m+error; i++) {
+            if (wt_huff[i] == 0) V++;
+        }
+        if (V != 0) E_asterisco = m * log(m / V);
+        else E_asterisco = E;
+    }
+
+    if (E <= 1 / 30 * pow(2, 32)) {
+        E_asterisco = E;
+    }
+
+    if (E > 1 / 30 * pow(2, 32)) {
+        E_asterisco = -1 * pow(2, 32) * log(1 - E / pow(2, 32));
+    }
+    return E_asterisco;
+}
+
+void HyperLogLog::union_wm_int(wm_int<rrr_vector<15>> wm_int1,wm_int<rrr_vector<15>> wm_int2){
+    if (wm_int1.size() != wm_int2.size()) {
+        cout << "Deben ser de mismo tamaño" << endl;
+        return;
+    }
+    int error = 8;
+    for (int i = error; i < this->m + error; i++) {
+        this->M[i-error] = max(wm_int1[i], wm_int2[i]);
+    }
+}
+
+void HyperLogLog::union_wt_huff(wt_huff<rrr_vector<15>> wt_huff1,wt_huff<rrr_vector<15>> wt_huff2){
+    if (wt_huff1.size() != wt_huff2.size()) {
+        cout << "Deben ser de mismo tamaño" << endl;
+        return;
+    }
+    int error = 8;
+    for (int i = error; i < this->m + error; i++) {
+        this->M[i-error] = max(wt_huff1[i], wt_huff2[i]);
+    }
+}
 
 void HyperLogLog::print() {
-    int promedio = 0;
     for (int i = 0; i < m; i++) {
-        promedio += M[i];
         printf("%d ", M[i]);
     }
-    printf("\nPromedio: %d\n", promedio / m);
 }

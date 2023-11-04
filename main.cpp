@@ -42,21 +42,35 @@ int main(){
     insertarKMER(&HLL1,genoma1,10);
     insertarKMER(&HLL2,genoma2,10);
 
-    //Calculo cardinalidad
-    printf("Cardinalidad HLL1: %.2f\n",HLL1.cardinalidad());
-    printf("Cardinalidad HLL2: %.2f\n",HLL2.cardinalidad());
+    //Comprimir sketches
+    wm_int<rrr_vector<15>> HLL1_compressed_wm_int = HLL1.compress_wm_int();
+    wt_huff<rrr_vector<15>> HLL1_compressed_wt_huff = HLL1.compress_wt_huff();
+    wm_int<rrr_vector<15>> HLL2_compressed_wm_int = HLL2.compress_wm_int();
+    wt_huff<rrr_vector<15>> HLL2_compressed_wt_huff = HLL2.compress_wt_huff();
 
+    //Calculo cardinalidad
+    printf("\nCardinalidad:\n");
+    printf("HLL1: %.2f\n",HLL1.cardinalidad());
+    printf("HLL2: %.2f\n",HLL2.cardinalidad());
+    printf("\nCardinalidad comprimida:\n");
+    printf("HLL1_wm_int: %.2f\n",HLL1.cardinalidad_wm_int(HLL1_compressed_wm_int));
+    printf("HLL1_wt_huff: %.2f\n",HLL1.cardinalidad_wt_huff(HLL1_compressed_wt_huff));
+    printf("HLL2_wm_int: %.2f\n",HLL2.cardinalidad_wm_int(HLL2_compressed_wm_int));
+    printf("HLL2_wt_huff: %.2f\n",HLL2.cardinalidad_wt_huff(HLL2_compressed_wt_huff));
+    
     //Union de HLL1 y HLL2
     printf("\nUnion HLL1 y HLL2\n");
-    HLL1.Union(HLL2);
-    printf("Cardinalidad HLL1: %.2f\n",HLL1.cardinalidad());
-
-    //HLL1.print();
-    //Compresion
-    printf("\nSe comprime HLL1:\n");
-    printf("Cardinalidad HLL1: %.2f\n",HLL1.cardinalidad_wm_int(HLL1.compress_wm_int()));
+    HLL1.Union(HLL2); 
+    printf("HLL1: %.2f\n",HLL1.cardinalidad());
+    HLL1.union_wm_int(HLL1_compressed_wm_int,HLL2_compressed_wm_int);
+    HLL1.union_wt_huff(HLL1_compressed_wt_huff,HLL2_compressed_wt_huff);
+    printf("HLL1: %.2f\n",HLL1.cardinalidad());
 
 
-    
+    //Calculo de tiempo
+    /*auto start = chrono::high_resolution_clock::now();  
+    auto finish = chrono::high_resolution_clock::now();
+    auto d = chrono::duration_cast<chrono::nanoseconds> (finish1 - start1).count();
+    printf("Tiempo de union: %ld\n",d);*/
     return 0;
 }
