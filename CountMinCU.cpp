@@ -1,6 +1,9 @@
 #include <bits/stdc++.h>
 #include <iostream>
 #include <vector>
+#include <sdsl/wm_int.hpp>
+#include <sdsl/csa_wt.hpp>
+#include <sdsl/wt_huff.hpp>
 
 #include "CountMinCU.h"
 #include "hashes/City.h"
@@ -9,6 +12,7 @@
 #include "hashes/MurmurHash3.h"
 
 using namespace std;
+using namespace sdsl;
 
 uint64_t seedCU = 12345;
 
@@ -16,7 +20,8 @@ uint64_t seedCU = 12345;
 CountMinCU::CountMinCU(int w, int d) {
     this->width = w;
     this->depth = d;
-    this->sketch = vector<vector<unsigned int>>(d, vector<unsigned int>(w));  // Inicializa en 0
+    //this->sketch = vector<vector<unsigned int>>(d, vector<unsigned int>(w));  // Inicializa en 0
+    this->sketch = vector<unsigned int>(w*d);  // Inicializa en 0
 }
 
 // Destructor de la clase
@@ -27,9 +32,9 @@ void CountMinCU::printSketch() {
     cout << "Sketch:" << endl;
     for (int i = 0; i < this->depth; i++) {
         for (int j = 0; j < this->width; j++) {
-            cout << sketch[i][j] << " ";
+            cout << sketch[(this->width*i)+j] << " ";
         }
-        printf("\n");
+        printf("\n\n");
     }
 }
 
@@ -62,8 +67,8 @@ void CountMinCU::insert(unsigned int element) {
     unsigned int estimada = estimarFreq(element);
     for (int i = 0; i < this->depth; i++) {
         int j = useHashCU(element, this->width, i);
-        if (estimada == this->sketch[i][j]) {
-            this->sketch[i][j]++;
+        if (estimada == this->sketch[(this->width*i)+j]) {
+            this->sketch[(this->width*i)+j]++;
         }
     }
 }
@@ -73,7 +78,27 @@ int CountMinCU::estimarFreq(unsigned int element) {
     unsigned int freq_est = UINT_MAX;
     for (int i = 0; i < this->depth; i++) {
         int j = useHashCU(element, this->width, i);
-        if (sketch[i][j] < freq_est) freq_est = sketch[i][j];
+        if (sketch[(this->width*i)+j] < freq_est) freq_est = sketch[(this->width*i)+j];
     }
     return freq_est;
+}
+
+wm_int<rrr_vector<15>> CountMinCU::compress_wm_int() {
+    wm_int<rrr_vector<15>> wm_int;
+    construct_im(wm_int, sketch, 4);
+    return wm_int;
+}
+
+int CountMinCU::estimarFreq_wm_int(wm_int<rrr_vector<15>> wm_int,unsigned int element) {
+    int error = 2;
+    unsigned int freq_est = UINT_MAX;
+    for (int i = 0; i < this->depth; i++) {
+        int j = useHashCU(element, this->width, i);
+        if (wm_int[(this->width*i)+j+error] < freq_est) freq_est = wm_int[(this->width*i)+j+error];
+    }
+    return freq_est;
+}
+
+int CountMinCU::size_in_bytes(){
+    return sketch.size()*sizeof(unsigned int);
 }

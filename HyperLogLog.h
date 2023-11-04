@@ -23,6 +23,7 @@ class HyperLogLog {
           void insert(string element);
           double cardinalidad();
           void Union(HyperLogLog h);
+          int size_in_bytes();
           wm_int<rrr_vector<15>> compress_wm_int();
           wt_huff<rrr_vector<15>> compress_wt_huff();
           double cardinalidad_wm_int(wm_int<rrr_vector<15>> wm_int);

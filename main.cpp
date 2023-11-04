@@ -1,4 +1,5 @@
 #include "HyperLogLog.h"
+#include "CountMinCU.h"
 #include <bits/stdc++.h>
 #include <iostream>
 #include <fstream>
@@ -6,8 +7,23 @@
 #include <sdsl/int_vector.hpp>
 
 using namespace std;
+vector<unsigned int> copiarArchivoUINT(string nombreArchivo){
+    const char* aux = nombreArchivo.data();
+    FILE* archivo = fopen(aux, "r");
+    if (!archivo) {
+        perror("Error al abrir el archivo");
+        exit(EXIT_FAILURE);
+    }
+    vector<unsigned int> file;
+    unsigned int number;
+    while (fscanf(archivo, "%u", &number) != EOF) {
+        file.push_back(number);
+    }
+    fclose(archivo);
+    return file;
+}
 
-vector<string> copiarArchivo(string nombreArchivo){
+vector<string> copiarArchivoString(string nombreArchivo){
     ifstream archivo(nombreArchivo);
     vector<string> vec;
     string linea;
@@ -30,8 +46,8 @@ void insertarKMER(HyperLogLog *h, vector<string> v,int k){
 }
 
 int main(){
-    vector<string> genoma1 = copiarArchivo("datasets/GCF_001522075.1_ASM152207v1_genomic.fna");
-    vector<string> genoma2 = copiarArchivo("datasets/GCF_000717965.1_ASM71796v1_genomic.fna");
+    /*vector<string> genoma1 = copiarArchivoString("datasets/GCF_001522075.1_ASM152207v1_genomic.fna");
+    vector<string> genoma2 = copiarArchivoString("datasets/GCF_000717965.1_ASM71796v1_genomic.fna");
     
     //Inicializacion
     int p = 14;
@@ -72,5 +88,18 @@ int main(){
     auto finish = chrono::high_resolution_clock::now();
     auto d = chrono::duration_cast<chrono::nanoseconds> (finish1 - start1).count();
     printf("Tiempo de union: %ld\n",d);*/
+
+    vector<unsigned int> traza = copiarArchivoUINT("datasets/Chicago-20080515.txt");
+    CountMinCU sketchCU(100, 4);
+    for(int i = 0; i < traza.size(); i++){
+        sketchCU.insert(traza[i]);
+    }
+    printf("Frecuencia real: %d\n",sketchCU.estimarFreq(traza[0]));
+    wm_int<rrr_vector<15>> sketchCU_compressed_wm_int = sketchCU.compress_wm_int();
+    printf("Frecuencia compresion: %d\n",sketchCU.estimarFreq_wm_int(sketchCU_compressed_wm_int,traza[0]));
+
+    printf("Size sketch: %d\n", sketchCU.size_in_bytes());
+    printf("Size comprimido: %ld\n", size_in_bytes(sketchCU_compressed_wm_int));
+
     return 0;
 }
