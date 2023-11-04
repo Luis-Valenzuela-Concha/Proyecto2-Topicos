@@ -46,12 +46,12 @@ void HyperLogLog::insert(string element) {
     M[j] = max(M[j], w);
 }
 
-long double HyperLogLog::estimarCard() {
-    long double E;
+double HyperLogLog::cardinalidad() {
+    double E;
 
-    long double a_m = 0.7213 / (1 + 1.079 / m);
-    long double num = a_m * m * m;
-    long double den = 0;
+    double a_m = 0.7213 / (1 + 1.079 / m);
+    double num = a_m * m * m;
+    double den = 0;
 
     for (int i = 0; i < m; i++) {
         den += 1 / (pow(2, M[i]));
@@ -59,14 +59,12 @@ long double HyperLogLog::estimarCard() {
     E = num / den;
     return E;
     // Agregar correcciones
-    /*long double E_asterisco;
+    double E_asterisco;
 
     if (E <= 5 / 2 * m) {
         int V = 0;
         for (int i = 0; i < m; i++) {
-            if (M[i] == 0) {
-                V++;
-            }
+            if (M[i] == 0) V++;
         }
         if (V != 0) {
             E_asterisco = m * log(m / V);
@@ -82,10 +80,11 @@ long double HyperLogLog::estimarCard() {
     if (E > 1 / 30 * pow(2, 32)) {
         E_asterisco = -1 * pow(2, 32) * log(1 - E / pow(2, 32));
     }
-    return E_asterisco;*/
+    return E_asterisco;
 }
 
 void HyperLogLog::Union(HyperLogLog h) {  // Se une con otro sketch
+    cout << this->m << " " << h.m << endl;
     if (this->m != h.m) {
         cout << "Deben ser de mismo tamaño << endl";
         return;
@@ -108,13 +107,49 @@ wm_int<rrr_vector<15>> HyperLogLog::compress_wm_int() {
 wt_huff<rrr_vector<15>> HyperLogLog::compress_wt_huff() {
     wt_huff<rrr_vector<15>> wt_huff;
     construct_im(wt_huff, M, 1);
-
-    //const uint32_t byteSize = size_in_bytes(wm_int);
     return wt_huff;
 }
 
+double HyperLogLog::cardinalidad_wm_int(wm_int<rrr_vector<15>> wm_int){
+    double E;
+
+    double a_m = 0.7213 / (1 + 1.079 / m);
+    double num = a_m * m * m;
+    double den = 0;
+    int error = 8;
+    for (int i = error; i < m+error; i++) {
+        den += 1 / (pow(2, wm_int[i]));
+    }
+    E = num / den;
+    return E;
+    // Agregar correcciones
+    double E_asterisco;
+
+    if (E <= 5 / 2 * m) {
+        int V = 0;
+        for (int i = error; i < m+error; i++) {
+            if (wm_int[i] == 0) V++;
+        }
+        if (V != 0) E_asterisco = m * log(m / V);
+        else E_asterisco = E;
+    }
+
+    if (E <= 1 / 30 * pow(2, 32)) {
+        E_asterisco = E;
+    }
+
+    if (E > 1 / 30 * pow(2, 32)) {
+        E_asterisco = -1 * pow(2, 32) * log(1 - E / pow(2, 32));
+    }
+    return E_asterisco;
+}
+
+
 void HyperLogLog::print() {
+    int promedio = 0;
     for (int i = 0; i < m; i++) {
+        promedio += M[i];
         printf("%d ", M[i]);
     }
+    printf("\nPromedio: %d\n", promedio / m);
 }

@@ -21,11 +21,12 @@ class HyperLogLog {
           ~HyperLogLog();
           pair<unsigned int, uint8_t> values(string element);
           void insert(string element);
-          long double estimarCard();
+          double cardinalidad();
           void Union(HyperLogLog h);
           size_t sizeInBits();
           wm_int<rrr_vector<15>> compress_wm_int();
           wt_huff<rrr_vector<15>> compress_wt_huff();
+          double cardinalidad_wm_int(wm_int<rrr_vector<15>> wm_int);
           void print();
 };
 

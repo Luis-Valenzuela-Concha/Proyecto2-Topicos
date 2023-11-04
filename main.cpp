@@ -43,24 +43,20 @@ int main(){
     insertarKMER(&HLL2,genoma2,10);
 
     //Calculo cardinalidad
-    printf("Cardinalidad HLL1: %.2Lf\n",HLL1.estimarCard());
-    printf("Cardinalidad HLL2: %.2Lf\n",HLL2.estimarCard());
+    printf("Cardinalidad HLL1: %.2f\n",HLL1.cardinalidad());
+    printf("Cardinalidad HLL2: %.2f\n",HLL2.cardinalidad());
 
     //Union de HLL1 y HLL2
     printf("\nUnion HLL1 y HLL2\n");
     HLL1.Union(HLL2);
-    printf("Cardinalidad HLL1: %.2Lf\n",HLL1.estimarCard());
+    printf("Cardinalidad HLL1: %.2f\n",HLL1.cardinalidad());
 
     //HLL1.print();
     //Compresion
-    wt_huff<rrr_vector<15>> comprimido = HLL1.compress_wt_huff();
-    wm_int<rrr_vector<15>> comprimido2 = HLL1.compress_wm_int();
-    int m = pow(2, p); 
-    cout << endl << endl;
-    
-    for(int i = 0; i < m+10; i++){
-        printf("%lu ",comprimido2[i]);
-    }
+    printf("\nSe comprime HLL1:\n");
+    printf("Cardinalidad HLL1: %.2f\n",HLL1.cardinalidad_wm_int(HLL1.compress_wm_int()));
+
+
     
     return 0;
 }
