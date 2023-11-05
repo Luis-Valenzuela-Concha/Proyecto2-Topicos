@@ -1,4 +1,4 @@
-# Proyecto2-Topicos
+# Proyecto 2 - Topicos
 
 Se presentan los detalles y resultados de la implementación del sketch de estimación de
 cardinalidad HyperLogLog junto con la compresión del mismo y del sketch de estimación de frecuencia
